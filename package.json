@@ -1,0 +1,8 @@
+{
+  "devDependencies": {
+    "@types/node-telegram-bot-api": "^0.57.6"
+  },
+  "dependencies": {
+    "node-telegram-bot-api": "^0.60.0"
+  }
+}

@@ -23,17 +23,17 @@ bot.post("/", async function(req, res) {
 
     //  Define your RTDB Reference
     const rtdbReference = admin.database().ref("Sensor MQ7");
-    const mq7ref = rtdbReference.child("-NHi7dBPMlVi6hXrnI03");
-    const valref = mq7ref.child("MQ7");
-    //  Fetch the data
-    const snap = await valref.get();
-    const snapValue = snap.val();
-    //  Do whatever you need with snapValue to inject it in your response...
+    const snapshot = rtdbReference.child("-NHi5G4wg1m-MrPYvMPQ/MQ7").get();
 
+    //  Fetch the data
+    const snap = await snapshot;
+    const snapValue = snap.val();
+
+    //  Inject snapvalue in the response
     return res.status(200).send({
       method: "sendMessage",
       chat_id,
-      text: `${first_name}, \n  ${receivedMessage} \n ${snapValue}`,
+      text: `${first_name}\n${receivedMessage}\n${snapValue}`,
     });
   }
   return res.status(200).send({status: "An error occured"});
