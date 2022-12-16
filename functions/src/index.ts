@@ -49,7 +49,7 @@ bot.post("/", async function(req, res) {
         return res.status(200).send({
           method: "sendMessage",
           chat_id,
-          text: `${first_name} is in danger! Carbon Monoxide Concentration is too high: ${carbonMonoxideConcentration}. Last known location is at (${latitude}, ${longitude}) approximately ${time}.`,
+          text: `Warning! ${first_name} may be in danger. The carbon monoxide concentration level is currently at ${carbonMonoxideConcentration}. The last known location was approximately at (${latitude}, ${longitude}) at ${time}.`,
           reply_markup: {
             inline_keyboard: [
               [
