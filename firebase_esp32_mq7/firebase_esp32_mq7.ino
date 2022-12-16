@@ -42,7 +42,7 @@ void setup() {
 
   // Initialize time client
   timeClient.begin();
-  timeClient.setTimeOffset(7200);
+  timeClient.setTimeOffset(28800); // Set time offset to GMT+8 for Malaysia
 
   // Initialize Firebase
   Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH);
