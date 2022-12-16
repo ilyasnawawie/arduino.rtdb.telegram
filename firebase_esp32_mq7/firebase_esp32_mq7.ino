@@ -4,18 +4,19 @@
 #include <Timezone.h>
 #include <NTPClient.h>
 #include <WiFiUdp.h>
-#include <TinyGPS++.h>
-#include <HardwareSerial.h>
+#include <HTTPClient.h>
+#include <ArduinoJson.h>
 
 #define FIREBASE_HOST "gas-mq7-default-rtdb.firebaseio.com"
 #define FIREBASE_AUTH "BIypPXRlYOeEdSb1vQoe3Bq7CX4OHOKJ6bWkI3yg"
 #define WIFI_SSID "Ilyas"
 #define WIFI_PASSWORD "qwerty123"
+#define API_KEY "AIzaSyCuSQwnLuZVlArDjgP3oSH3IUP5GO9rAQQ"
 
 FirebaseData firebaseData;
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP);
-TinyGPSPlus gps;
+HTTPClient http;
 
 int mq7 = 34;
 int buzzer = 14;
@@ -26,7 +27,6 @@ int green = 25;
 void setup() {
   // Initialize serial connection
   Serial.begin(115200);
-  Serial1.begin(9600, SERIAL_8N1, 32, 33);
 
   // Connect to WiFi
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
@@ -55,19 +55,29 @@ void loop() {
   int Sdata = map(Vrdata, 0, 4095, 0, 1000);
   Serial.println(Sdata);
 
-  // Update time and location
+  // Update time
   timeClient.update();
-  while (Serial1.available() > 0) {
-    gps.encode(Serial1.read());
-  }
 
-  // Check if time and location are valid
-  if (timeClient.getFormattedTime() != "") {
+  // Send request to Geolocation API
+  String url = "https://www.googleapis.com/geolocation/v1/geolocate?key=" + 
+  String (API_KEY);
+  http.begin(url);
+  int httpCode = http.POST("{}");
+  if (httpCode > 0) {
+    String response = http.getString();
+    Serial.println(response);
+    DynamicJsonDocument doc(1024);
+    deserializeJson(doc, response);
+    double latitude = doc["location"]["lat"];
+    double longitude = doc["location"]["lng"];
+    Serial.println(latitude);
+    Serial.println(longitude);
+
     // Create JSON object with time, location, and sensor data
     FirebaseJson json;
     json.set("/time", timeClient.getFormattedTime());
-    json.set("/latitude", gps.location.lat());
-    json.set("/longitude", gps.location.lng());
+    json.set("/latitude", latitude);
+    json.set("/longitude", longitude);
     json.set("/MQ7", Sdata);
 
     // Push data to Firebase
@@ -77,7 +87,10 @@ void loop() {
       Serial.println("Push failed");
       Serial.println(firebaseData.errorReason());
     }
+  } else {
+    Serial.println("Error: " + httpCode);
   }
+  http.end();
 
   // Control LEDs and buzzer
   if (Sdata > 0 && Sdata < 200) {
