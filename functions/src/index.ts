@@ -17,46 +17,46 @@ bot.post("/", async function(req, res) {
     req.body.message.from &&
     req.body.message.from.first_name
   ) {
-    const chat_id = req.body.message.chat.id;
-    const first_name = req.body.message.from.first_name;
-    const receivedMessage = req.body.message.text;
+    const chatId = req.body.message.chat.id;
+    const userName = req.body.message.from.first_name;
+    const message = req.body.message.text;
 
     // Check if the received message is the "/start" command
-    if (receivedMessage === "/start") {
+    if (message === "/start") {
       // Define your RTDB Reference to point to the "Sensor MQ7" parent node
-      const rtdbReference = admin.database().ref("Sensor MQ7");
+      const rtdbRef = admin.database().ref("Sensor MQ7");
 
       // Read the latest unknown child node of "Sensor MQ7"
-      const latestUnknownChildNodeSnapshot = await rtdbReference
+      const latestUnknownChildSnapshot = await rtdbRef
           .limitToLast(1)
           .once("child_added");
 
       // Read the known child nodes of the latest unknown child node
-      const carbonMonoxideConcentrationSnapshot = latestUnknownChildNodeSnapshot.child("MQ7");
-      const latitudeSnapshot = latestUnknownChildNodeSnapshot.child("latitude");
-      const longitudeSnapshot = latestUnknownChildNodeSnapshot.child("longitude");
-      const timeSnapshot = latestUnknownChildNodeSnapshot.child("time");
+      const coConcentrationSnapshot = latestUnknownChildSnapshot.child("MQ7");
+      const latitudeSnapshot = latestUnknownChildSnapshot.child("latitude");
+      const longitudeSnapshot = latestUnknownChildSnapshot.child("longitude");
+      const timeSnapshot = latestUnknownChildSnapshot.child("time");
 
       // Get the values of the known child nodes
-      const carbonMonoxideConcentration = carbonMonoxideConcentrationSnapshot.val();
+      const coConcentration = coConcentrationSnapshot.val();
       const latitude = latitudeSnapshot.val();
       const longitude = longitudeSnapshot.val();
       const time = timeSnapshot.val();
 
       // Check if the known child node value is above 100
-      if (carbonMonoxideConcentration > 100) {
+      if (coConcentration > 100) {
         const mapsLink = `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`;
         const encodedMapsLink = encodeURI(mapsLink);
         // Return the response with a button interface
         return res.status(200).send({
           method: "sendMessage",
-          chat_id,
-          text: `Warning! ${first_name} may be in danger. The carbon monoxide concentration level is currently at ${carbonMonoxideConcentration}. The last known location was approximately at (${encodedMapsLink}) at ${time}.`,
+          chat_id: chatId,
+          text: `${userName} mungkin berada dalam bahaya. Tahap konsentrasi karbon monoksida pada masa ini adalah ${coConcentration}. Lokasi terakhir ada di (${encodedMapsLink}) pada pukul ${time}.`,
           reply_markup: {
             inline_keyboard: [
               [
                 {
-                  text: `Call ${first_name}`,
+                  text: `Call ${userName}`,
                   callback_data: "call_user",
                 },
               ],
@@ -74,5 +74,4 @@ bot.post("/", async function(req, res) {
   // Return an empty response
   return res.status(200).send({});
 });
-
 export const router = functions.https.onRequest(bot);
