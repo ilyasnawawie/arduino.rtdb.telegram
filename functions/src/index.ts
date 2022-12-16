@@ -31,23 +31,25 @@ bot.post("/", async function(req, res) {
           .limitToLast(1)
           .once("child_added");
 
-      // Read the known child nodes of the unknown child node
-      const knownChildNodeSnapshot1 = latestUnknownChildNodeSnapshot.child("MQ7");
-      const knownChildNodeSnapshot2 = latestUnknownChildNodeSnapshot.child("Time");
-      const knownChildNodeSnapshot3 = latestUnknownChildNodeSnapshot.child("Location");
+      // Read the known child nodes of the latest unknown child node
+      const carbonMonoxideConcentrationSnapshot = latestUnknownChildNodeSnapshot.child("MQ7");
+      const latitudeSnapshot = latestUnknownChildNodeSnapshot.child("latitude");
+      const longitudeSnapshot = latestUnknownChildNodeSnapshot.child("longitude");
+      const timeSnapshot = latestUnknownChildNodeSnapshot.child("time");
 
       // Get the values of the known child nodes
-      const knownChildNodeValue1 = knownChildNodeSnapshot1.val();
-      const knownChildNodeValue2 = knownChildNodeSnapshot2.val();
-      const knownChildNodeValue3 = knownChildNodeSnapshot3.val();
+      const carbonMonoxideConcentration = carbonMonoxideConcentrationSnapshot.val();
+      const latitude = latitudeSnapshot.val();
+      const longitude = longitudeSnapshot.val();
+      const time = timeSnapshot.val();
 
       // Check if the known child node value is above 100
-      if (knownChildNodeValue1 > 100) {
+      if (carbonMonoxideConcentration > 100) {
         // Return the response with a button interface
         return res.status(200).send({
           method: "sendMessage",
           chat_id,
-          text: `${first_name} is in danger! Carbon Monoxide Concentration is too high: ${knownChildNodeValue1}. Last known location is at ${knownChildNodeValue3} approximately ${knownChildNodeValue2}.`,
+          text: `${first_name} is in danger! Carbon Monoxide Concentration is too high: ${carbonMonoxideConcentration}. Last known location is at (${latitude}, ${longitude}) approximately ${time}.`,
           reply_markup: {
             inline_keyboard: [
               [
