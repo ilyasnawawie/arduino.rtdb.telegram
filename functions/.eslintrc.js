@@ -30,6 +30,6 @@ module.exports = {
     "camelcase": "off",
     "eol-last": 0,
     "no-multiple-empty-lines": ["error", {"max": 1, "maxEOF": 0}],
-    "max-len": ["error", {"code": 210}],
+    "max-len": ["error", {"code": 300}],
   },
 };
