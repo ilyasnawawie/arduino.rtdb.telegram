@@ -45,11 +45,13 @@ bot.post("/", async function(req, res) {
 
       // Check if the known child node value is above 100
       if (carbonMonoxideConcentration > 100) {
+        const mapsLink = `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`;
+        const encodedMapsLink = encodeURI(mapsLink);
         // Return the response with a button interface
         return res.status(200).send({
           method: "sendMessage",
           chat_id,
-          text: `Warning! ${first_name} may be in danger. The carbon monoxide concentration level is currently at ${carbonMonoxideConcentration}. The last known location was approximately at (${latitude}, ${longitude}) at ${time}.`,
+          text: `Warning! ${first_name} may be in danger. The carbon monoxide concentration level is currently at ${carbonMonoxideConcentration}. The last known location was approximately at (${encodedMapsLink}) at ${time}.`,
           reply_markup: {
             inline_keyboard: [
               [
