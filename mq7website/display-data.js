@@ -36,9 +36,7 @@ rtdbRef.once("value", function(snapshot) {
    // Create a new row in the table
    var row = document.createElement("tr");
 
-
-  // Define a new variable `mapsLink` that concatenates the latitude and longitude values with the Google Maps URL format
-  var mapsLink = "https://www.google.com/maps/search/?api=1&query=" + latitude + "," + longitude;
+   var mapsLink = "https://www.google.com/maps/search/?api=1&query=" + latitude + "," + longitude;
 
    var timeCell = document.createElement("td");
    timeCell.innerHTML = time;

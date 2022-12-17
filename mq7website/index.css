@@ -51,8 +51,8 @@ table {
 }
 
 #locationLink {
-  display: block; /* Make the link block-level to take up the full width of the cell */
-  text-align: center; /* Center the text within the link */
+  display: block; 
+  text-align: center; 
   color: #0000EE;
   text-decoration: underline;
 }

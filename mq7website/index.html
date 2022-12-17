@@ -1,7 +1,10 @@
+<!DOCTYPE html>
 <html>
 <head>
   <title>Sensor Data</title>
   <link rel="stylesheet" href="index.css">
+  <script src="https://www.gstatic.com/firebasejs/7.21.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.21.1/firebase-database.js"></script>
 </head>
 <body>
   <div class="menu">
@@ -22,7 +25,7 @@
     </thead>
     <tbody></tbody>
   </table>
-  <iframe id="pdf-frame" src="ILYAS NAWAWIE.pdf" style="display: none;" onunload="hidePDF()"></iframe>
+  <iframe id="pdf-frame" src="ILYASNAWAWIE.pdf" style="display: none;" onunload="hidePDF()"></iframe>
   <script src="display-data.js"></script>
   <script>
     function showPDF() {

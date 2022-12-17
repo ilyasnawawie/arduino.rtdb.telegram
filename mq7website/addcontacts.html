@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <link rel="stylesheet" href="index.css">
   <title>Add Emergency Contacts</title>
+  <link rel="stylesheet" href="index.css">
   <!-- Add the Firebase JavaScript library and credentials -->
   <script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-database.js"></script>
@@ -22,7 +22,7 @@
 </head>
 <body>
   <div class="menu">
-    <a href="#" class="active" onclick="hidePDF()">Home</a>
+    <a href="#" class="active" onclick="window.location='index.html';">Home</a>
     <a href="#" onclick="showPDF()">About</a>
     <a href="#" onclick="window.location='addcontacts.html';">Contacts</a>
     <a href="#" onclick="window.open('https://github.com/ilyasnawawie/arduino.rtdb.telegram',
@@ -36,37 +36,48 @@
       <input type="text" id="name" name="name" style="width: 100%;"><br>
       <label for="phone" style="display: block;">Phone Number:</label>
       <input type="text" id="phone" name="phone" style="width: 100%;"><br>
-      <label for="email" style="display: block;">Email:</label>
-      <input type="text" id="email" name="email" style="width: 100%;"><br><br>
+      <label for="teleid" style="display: block;">Telegram ID:</label>
+      <input type="text" id="teleid" name="teleid" style="width: 100%;"><br><br>
       <button type="submit" style="width: 49%;">Submit</button>
       <button type="button" id="update-button" style="width: 49%;">Update</button>
+
     </form> 
-    
     <table>
       <thead>
         <tr>
           <th>Name</th>
           <th>Phone Number</th>
-          <th>Email</th>
+          <th>Telegram ID</th>
           <th>Action</th>
         </tr>
       </thead>
       <tbody id="contacts-table-body">
       </tbody>
-    </table>    
+    </table>  
+    <iframe id="pdf-frame" src="ILYASNAWAWIE.pdf" width="100%" height="500" style="display: none;" onunload="hidePDF()"></iframe>
   </div>
 
-  <!-- Add a submit event listener to the form -->
+  <script>
+    function showPDF() {
+      const pdfFrame = document.getElementById("pdf-frame");
+      pdfFrame.style.display = "block";
+    }
+    function hidePDF() {
+      const pdfFrame = document.getElementById("pdf-frame");
+      pdfFrame.style.display = "none";
+    }
+  </script>
+
   <script>
     // Add a submit event listener to the form
     const form = document.querySelector("form");
     form.addEventListener("submit", (event) => {
-    event.preventDefault(); // Prevent the form from reloading the page
+    event.preventDefault();
     
   // Get the form data
   const name = document.getElementById("name").value;
   const phone = document.getElementById("phone").value;
-  const email = document.getElementById("email").value;
+  const teleid = document.getElementById("teleid").value;
 
   // Get a reference to the "Contacts" parent node
   const contactsRef = firebase.database().ref("Contacts");
@@ -74,29 +85,26 @@
   // Add a new child node with a unique key
   const newContactRef = contactsRef.push();
 
-      // Set the values for the "Name" and "NP" child nodes
+  // Set the values for the "Name" and "NP" child nodes
   newContactRef.set({
     Name: name,
     NP: phone,
-    Email: email
+    TeleID: teleid
   });
-      
-       // Display a success message to the user
+  
        alert("Contact added successfully!");
-
-       // Reset the form
        form.reset();
     });
 
    // Add an event listener for the update button
-const updateButton = document.getElementById("update-button");
-updateButton.addEventListener("click", (event) => {
-  event.preventDefault(); // Prevent the button from reloading the page
+  const updateButton = document.getElementById("update-button");
+  updateButton.addEventListener("click", (event) => {
+  event.preventDefault();
 
   // Get the form data
   const name = document.getElementById("name").value;
   const phone = document.getElementById("phone").value;
-  const email = document.getElementById("email").value;
+  const teleid = document.getElementById("teleid").value;
   const key = document.getElementById("key").value;
 
   // Get a reference to the "Contacts" parent node
@@ -106,13 +114,10 @@ updateButton.addEventListener("click", (event) => {
   contactsRef.child(key).update({
     Name: name,
     NP: phone,
-    Email: email
+    TeleID: teleid
   });
 
-  // Display a success message to the user
   alert("Contact updated successfully!");
-
-  // Reset the form
   form.reset();
 });
 
@@ -134,7 +139,7 @@ contactsRef.on("value", (snapshot) => {
     row.innerHTML = `
       <td>${contact.Name}</td>
       <td>${contact.NP}</td>
-      <td>${contact.Email}</td>
+      <td>${contact.TeleID}</td>
       <td>
         <button type="button" class="select-button" data-key="${key}">Select</button>
       </td>
@@ -156,7 +161,7 @@ document.addEventListener("click", (event) => {
   // Populate the form fields with the contact data
   document.getElementById("name").value = contact.Name;
   document.getElementById("phone").value = contact.NP;
-  document.getElementById("email").value = contact.Email;
+  document.getElementById("teleid").value = contact.TeleID;
   document.getElementById("key").value = key;
     }); 
 };
@@ -164,3 +169,4 @@ document.addEventListener("click", (event) => {
   </script> 
 </body>
 </html>
+
