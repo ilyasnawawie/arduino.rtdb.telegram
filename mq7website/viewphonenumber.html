@@ -1,7 +1,10 @@
 <html>
 <head>
-  <title>Sensor Data</title>
+  <title>Contact Information</title>
   <link rel="stylesheet" href="index.css">
+  <script src="https://www.gstatic.com/firebasejs/7.21.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.21.1/firebase-database.js"></script>
+
 </head>
 <body>
   <div class="menu">
@@ -14,16 +17,16 @@
   <table id="data-table">
     <thead>
       <tr>
-        <th>Time (24 hour format)</th>
-        <th>Location</th>
-        <th>CO Concentration</th>
-        <th>Danger level</th>
+        <th>Email</th>
+        <th>Name</th>
+        <th>Phone Number</th>
       </tr>
     </thead>
     <tbody></tbody>
   </table>
   <iframe id="pdf-frame" src="ILYAS NAWAWIE.pdf" style="display: none;" onunload="hidePDF()"></iframe>
-  <script src="display-data.js"></script>
+  <script src="readphonenumber.js"></script>
+  <script src="updatedelete.js"></script>
   <script>
     function showPDF() {
       const pdfFrame = document.getElementById("pdf-frame");
@@ -36,3 +39,9 @@
   </script>
 </body>
 </html>
+
+
+
+
+
+

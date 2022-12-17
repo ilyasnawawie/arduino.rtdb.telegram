@@ -31,39 +31,55 @@
   <h1>Add Emergency Contacts</h1>
   <div style="text-align: center;">
     <form action="/submit-emergency-contact" method="post" style="display: inline-block; width: 300px;">
+      <input type="hidden" id="key" name="key">
       <label for="name" style="display: block;">Name:</label>
       <input type="text" id="name" name="name" style="width: 100%;"><br>
       <label for="phone" style="display: block;">Phone Number:</label>
       <input type="text" id="phone" name="phone" style="width: 100%;"><br>
       <label for="email" style="display: block;">Email:</label>
       <input type="text" id="email" name="email" style="width: 100%;"><br><br>
-      <button type="submit" style="width: 100%;">Submit</button>
+      <button type="submit" style="width: 49%;">Submit</button>
+      <button type="button" id="update-button" style="width: 49%;">Update</button>
     </form> 
+    
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Phone Number</th>
+          <th>Email</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="contacts-table-body">
+      </tbody>
+    </table>    
   </div>
 
   <!-- Add a submit event listener to the form -->
   <script>
+    // Add a submit event listener to the form
     const form = document.querySelector("form");
     form.addEventListener("submit", (event) => {
-      event.preventDefault(); // Prevent the form from reloading the page
+    event.preventDefault(); // Prevent the form from reloading the page
+    
+  // Get the form data
+  const name = document.getElementById("name").value;
+  const phone = document.getElementById("phone").value;
+  const email = document.getElementById("email").value;
 
-      // Get the form data
-      const name = document.getElementById("name").value;
-      const phone = document.getElementById("phone").value;
-      const email = document.getElementById("email").value;
+  // Get a reference to the "Contacts" parent node
+  const contactsRef = firebase.database().ref("Contacts");
 
-      // Get a reference to the "Contacts" parent node
-      const contactsRef = firebase.database().ref("Contacts");
-
-      // Add a new child node with a unique key
-      const newContactRef = contactsRef.push();
+  // Add a new child node with a unique key
+  const newContactRef = contactsRef.push();
 
       // Set the values for the "Name" and "NP" child nodes
-      newContactRef.set({
-        Name: name,
-        NP: phone,
-        Email: email
-      });
+  newContactRef.set({
+    Name: name,
+    NP: phone,
+    Email: email
+  });
       
        // Display a success message to the user
        alert("Contact added successfully!");
@@ -71,6 +87,80 @@
        // Reset the form
        form.reset();
     });
-  </script>
+
+   // Add an event listener for the update button
+const updateButton = document.getElementById("update-button");
+updateButton.addEventListener("click", (event) => {
+  event.preventDefault(); // Prevent the button from reloading the page
+
+  // Get the form data
+  const name = document.getElementById("name").value;
+  const phone = document.getElementById("phone").value;
+  const email = document.getElementById("email").value;
+  const key = document.getElementById("key").value;
+
+  // Get a reference to the "Contacts" parent node
+  const contactsRef = firebase.database().ref("Contacts");
+
+  // Update the values for the "Name" and "NP" child nodes for the contact with the specified key
+  contactsRef.child(key).update({
+    Name: name,
+    NP: phone,
+    Email: email
+  });
+
+  // Display a success message to the user
+  alert("Contact updated successfully!");
+
+  // Reset the form
+  form.reset();
+});
+
+// Get a reference to the "Contacts" parent node
+const contactsRef = firebase.database().ref("Contacts");
+
+// Add a value event listener to the "Contacts" node
+contactsRef.on("value", (snapshot) => {
+  const contacts = snapshot.val();
+  const tableBody = document.getElementById("contacts-table-body");
+
+  // Clear the table body
+  tableBody.innerHTML = "";
+
+  // Populate the table body with the contact data
+  for (const key in contacts) {
+    const contact = contacts[key];
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${contact.Name}</td>
+      <td>${contact.NP}</td>
+      <td>${contact.Email}</td>
+      <td>
+        <button type="button" class="select-button" data-key="${key}">Select</button>
+      </td>
+    `;
+    tableBody.appendChild(row);
+  }
+});
+
+// Add a click event listener to the "Select" buttons
+document.addEventListener("click", (event) => {
+  if (event.target.classList.contains("select-button")) {
+    const key = event.target.dataset.key;
+
+    // Get a reference to the "Contacts" parent node
+    const contactsRef = firebase.database().ref("Contacts");
+    contactsRef.child(key).once("value", (snapshot) => {
+    const contact = snapshot.val();
+
+  // Populate the form fields with the contact data
+  document.getElementById("name").value = contact.Name;
+  document.getElementById("phone").value = contact.NP;
+  document.getElementById("email").value = contact.Email;
+  document.getElementById("key").value = key;
+    }); 
+};
+});
+  </script> 
 </body>
 </html>
