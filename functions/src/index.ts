@@ -47,17 +47,21 @@ bot.post("/", async function(req, res) {
       if (coConcentration > 100) {
         const mapsLink = `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`;
         const encodedMapsLink = encodeURI(mapsLink);
+        // Update the text and callback data of the button to include the NP value
+        const buttonText = `Call ${userName}`;
+        const callbackData = `call_user_${userName}`;
+
         // Return the response with a button interface
         return res.status(200).send({
           method: "sendMessage",
           chat_id: chatId,
-          text: `${userName} mungkin berada dalam bahaya. Tahap konsentrasi karbon monoksida pada masa ini adalah ${coConcentration}. Lokasi terakhir ada di (${encodedMapsLink}) pada pukul ${time}.`,
+          text: `${userName} berada dalam bahaya. Tahap konsentrasi karbon monoksida pada masa ini adalah ${coConcentration}. Lokasi terakhir ada di (${encodedMapsLink}) pada pukul ${time}.`,
           reply_markup: {
             inline_keyboard: [
               [
                 {
-                  text: `Call ${userName}`,
-                  callback_data: "call_user",
+                  text: buttonText,
+                  callback_data: callbackData,
                 },
               ],
             ],
