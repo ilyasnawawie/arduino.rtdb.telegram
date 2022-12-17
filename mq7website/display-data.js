@@ -23,21 +23,43 @@ rtdbRef.once("value", function(snapshot) {
     var longitude = childSnapshot.child("longitude").val();
     var time = childSnapshot.child("time").val();
 
-    // Create a new row in the table
-    var row = document.createElement("tr");
+   // Determine the status based on the CO concentration
+   var status;
+   if (coConcentration < 300) {
+     status = "low";
+   } else if (coConcentration >= 300 && coConcentration <= 500) {
+     status = "medium";
+   } else {
+     status = "high";
+   }
 
-    // Add the data to the cells
-    var timeCell = document.createElement("td");
-    timeCell.innerHTML = time;
-    row.appendChild(timeCell);
+   // Create a new row in the table
+   var row = document.createElement("tr");
 
-    var locationCell = document.createElement("td");
-    locationCell.innerHTML = latitude + ", " + longitude;
-    row.appendChild(locationCell);
 
-    var mq7Cell = document.createElement("td");
-    mq7Cell.innerHTML = coConcentration;
-    row.appendChild(mq7Cell);
+  // Define a new variable `mapsLink` that concatenates the latitude and longitude values with the Google Maps URL format
+  var mapsLink = "https://www.google.com/maps/search/?api=1&query=" + latitude + "," + longitude;
+
+   var timeCell = document.createElement("td");
+   timeCell.innerHTML = time;
+   row.appendChild(timeCell);
+
+   var locationCell = document.createElement("td");
+   var locationLink = document.createElement("a");
+   locationLink.id = "locationLink";
+   locationLink.href = mapsLink;
+   locationLink.innerHTML = "View on Map";
+   locationCell.appendChild(locationLink);
+   row.appendChild(locationCell);
+
+   var mq7Cell = document.createElement("td");
+   mq7Cell.innerHTML = coConcentration;
+   row.appendChild(mq7Cell);
+
+   // Add the status to a new cell
+   var statusCell = document.createElement("td");
+   statusCell.innerHTML = status;
+   row.appendChild(statusCell);
 
     // Add the row to the table body
     document.getElementById("data-table").getElementsByTagName("tbody")[0].appendChild(row);

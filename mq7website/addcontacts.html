@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="index.css">
+  <title>Add Emergency Contacts</title>
+  <!-- Add the Firebase JavaScript library and credentials -->
+  <script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-database.js"></script>
+  <script>
+    // Initialize Firebase
+    var firebaseConfig = {
+      apiKey: "AIzaSyB8jKumbYyKaOb3Ap7ZF3xpAdxZJ_ls8zc",
+      authDomain: "gas-mq7.firebaseapp.com",
+      databaseURL: "https://gas-mq7-default-rtdb.firebaseio.com",
+      projectId: "gas-mq7",
+      storageBucket: "gas-mq7.appspot.com",
+      messagingSenderId: "283159719369",
+      appId: "1:283159719369:web:f40b8faec6e915a11f0c18"
+    };
+    firebase.initializeApp(firebaseConfig);
+  </script>
+</head>
+<body>
+  <div class="menu">
+    <a href="#" class="active" onclick="hidePDF()">Home</a>
+    <a href="#" onclick="showPDF()">About</a>
+    <a href="#" onclick="window.location='addcontacts.html';">Contacts</a>
+    <a href="#" onclick="window.open('https://github.com/ilyasnawawie/arduino.rtdb.telegram',
+    '_blank');">Documentation</a> 
+  </div>
+  <h1>Add Emergency Contacts</h1>
+  <div style="text-align: center;">
+    <form action="/submit-emergency-contact" method="post" style="display: inline-block; width: 300px;">
+      <label for="name" style="display: block;">Name:</label>
+      <input type="text" id="name" name="name" style="width: 100%;"><br>
+      <label for="phone" style="display: block;">Phone Number:</label>
+      <input type="text" id="phone" name="phone" style="width: 100%;"><br>
+      <label for="email" style="display: block;">Email:</label>
+      <input type="text" id="email" name="email" style="width: 100%;"><br><br>
+      <button type="submit" style="width: 100%;">Submit</button>
+    </form> 
+  </div>
+
+  <!-- Add a submit event listener to the form -->
+  <script>
+    const form = document.querySelector("form");
+    form.addEventListener("submit", (event) => {
+      event.preventDefault(); // Prevent the form from reloading the page
+
+      // Get the form data
+      const name = document.getElementById("name").value;
+      const phone = document.getElementById("phone").value;
+      const email = document.getElementById("email").value;
+
+      // Get a reference to the "Contacts" parent node
+      const contactsRef = firebase.database().ref("Contacts");
+
+      // Add a new child node with a unique key
+      const newContactRef = contactsRef.push();
+
+      // Set the values for the "Name" and "NP" child nodes
+      newContactRef.set({
+        Name: name,
+        NP: phone,
+        Email: email
+      });
+      
+       // Display a success message to the user
+       alert("Contact added successfully!");
+
+       // Reset the form
+       form.reset();
+    });
+  </script>
+</body>
+</html>
