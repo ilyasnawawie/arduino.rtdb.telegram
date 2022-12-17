@@ -1,0 +1,38 @@
+<!-- index.html -->
+<html>
+<head>
+  <title>Sensor Data</title>
+  <link rel="stylesheet" href="index.css">
+  <script src="https://www.gstatic.com/firebasejs/7.21.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.21.1/firebase-database.js"></script>
+</head>
+<body>
+  <div class="menu">
+    <a href="#" class="active" onclick="hidePDF()">Home</a>
+    <a href="#" onclick="showPDF()">About</a>
+    <a href="#" onclick="hidePDF()">Contact</a>
+  </div>
+  <table id="data-table">
+    <thead>
+      <tr>
+        <th>Time</th>
+        <th>Location</th>
+        <th>MQ7</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+  <iframe id="pdf-frame" src="ILYAS NAWAWIE.pdf" style="display: none;" onunload="hidePDF()"></iframe>
+  <script src="display-data.js"></script>
+  <script>
+    function showPDF() {
+      const pdfFrame = document.getElementById("pdf-frame");
+      pdfFrame.style.display = "block";
+    }
+    function hidePDF() {
+      const pdfFrame = document.getElementById("pdf-frame");
+      pdfFrame.style.display = "none";
+    }
+  </script>
+</body>
+</html>
