@@ -2,6 +2,125 @@
 <html>
 <head>
   <title>Add Emergency Contacts</title>
+  <style>
+
+h1 {
+  text-align: center;
+  margin: 0 auto;
+  width: 50%;
+  font-size: 24px;
+  padding: 20px 0;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
+
+    /* Form styles */
+form {
+  display: inline-block;
+  width: 300px;
+  text-align: center;
+}
+
+label {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+input[type="text"], input[type="number"] {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button[type="submit"] {
+  width: 49%;
+  background-color: #4CAF50;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button[type="submit"]:hover {
+  background-color: #45a049;
+}
+
+button[type="button"] {
+  width: 49%;
+  background-color: #f44336;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button[type="button"]:hover {
+  background-color: #d62d20;
+}
+
+/* Table styles */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+/* Menu styles */
+.menu {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #333;
+  color: #fff;
+  padding: 0 20px;
+  height: 50px;
+}
+
+.menu a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 18px;
+  line-height: 50px;
+}
+
+.menu .active {
+  color: #f00;
+}
+
+.menu a:hover {
+  color: white;
+  text-decoration: underline;
+}
+
+/* PDF frame styles */
+#pdf-frame {
+  display: none;
+  border: none;
+}
+  </style>
   <link rel="stylesheet" href="index.css">
   <!-- Add the Firebase JavaScript library and credentials -->
   <script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-app.js"></script>
@@ -22,9 +141,9 @@
 </head>
 <body>
   <div class="menu">
-    <a href="#" class="active" onclick="window.location='index.html';">Home</a>
+    <a href="#" onclick="window.location='index.html';">Home</a>
     <a href="#" onclick="showPDF()">About</a>
-    <a href="#" onclick="window.location='addcontacts.html';">Contacts</a>
+    <a href="#" class="active" onclick="window.location='addcontacts.html';">Contacts</a>
     <a href="#" onclick="window.open('https://github.com/ilyasnawawie/arduino.rtdb.telegram',
     '_blank');">Documentation</a> 
   </div>
@@ -42,7 +161,7 @@
       <button type="button" id="update-button" style="width: 49%;">Update</button>
 
     </form> 
-    <table>
+    <table class="dynamic-table">
       <thead>
         <tr>
           <th>Name</th>
@@ -51,7 +170,7 @@
           <th>Action</th>
         </tr>
       </thead>
-      <tbody id="contacts-table-body">
+      <tbody class="dynamic-table" id="contacts-table-body">
       </tbody>
     </table>  
     <iframe id="pdf-frame" src="ILYASNAWAWIE.pdf" width="100%" height="500" style="display: none;" onunload="hidePDF()"></iframe>

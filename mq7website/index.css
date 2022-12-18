@@ -26,6 +26,12 @@ html, body {
   color: #f00;
 }
 
+.menu a:hover {
+  color: white;
+  text-decoration: underline;
+}
+
+
 table {
   width: 100%;
   border-collapse: collapse;
