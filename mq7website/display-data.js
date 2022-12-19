@@ -1,4 +1,3 @@
-// Initialize Firebase
 var firebaseConfig = {
   apiKey: "AIzaSyB8jKumbYyKaOb3Ap7ZF3xpAdxZJ_ls8zc",
   authDomain: "gas-mq7.firebaseapp.com",
@@ -10,7 +9,7 @@ var firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 
-// Get a reference to the Realtime Database
+
 var rtdb = firebase.database();
 var rtdbRef = rtdb.ref("Sensor MQ7");
 

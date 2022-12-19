@@ -1,41 +1,136 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Sensor Data</title>
-  <link rel="stylesheet" href="index.css">
-  <script src="https://www.gstatic.com/firebasejs/7.21.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/7.21.1/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.21.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.21.1/firebase-database.js"></script>
+  <title>Login</title>
+  <style>
+    form {
+      width: 300px;
+      margin: 0 auto;
+      text-align: center;
+      padding: 30px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    input[type="text"], input[type="password"] {
+      width: 100%;
+      padding: 12px 20px;
+      margin: 8px 0;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button[type="submit"] {
+      width: 100%;
+      background-color: #4CAF50;
+color: white;
+padding: 14px 20px;
+margin: 8px 0;
+border: none;
+border-radius: 4px;
+cursor: pointer;
+}
+button[type="submit"]:hover {
+background-color: #45a049;
+}
+</style>
 </head>
 <body>
-  <div class="menu">
-    <a href="#" class="active" onclick="hidePDF()">Home</a>
-    <a href="#" onclick="showPDF()">About</a>
-    <a href="#" onclick="window.location='addcontacts.html';">Contacts</a>
-    <a href="#" onclick="window.open('https://github.com/ilyasnawawie/arduino.rtdb.telegram', 
-    '_blank');">Documentation</a>
-  </div>
-  <table id="data-table">
-    <thead>
-      <tr>
-        <th>Time (24 hour format)</th>
-        <th>Location</th>
-        <th>CO Concentration</th>
-        <th>Danger level</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-  <iframe id="pdf-frame" src="ILYASNAWAWIE.pdf" style="display: none;" onunload="hidePDF()"></iframe>
-  <script src="display-data.js"></script>
+    <form id="login-form">
+        <h2>Login</h2>
+        <label for="username">Username:</label><br>
+        <input type="text" id="username" name="username"><br>
+        <label for="password">Password:</label><br>
+        <input type="password" id="password" name="password"><br><br>
+      
+        <label for="login-option-login">User:</label>
+        <input type="radio" id="login-option-login" name="login-option" value="login" checked>
+        <label for="login-option-contacts">Contacts:</label>
+        <input type="radio" id="login-option-contacts" name="login-option" value="contacts">
+      
+        <br><br>
+        <button type="submit">Submit</button>
+      </form>        
+
   <script>
-    function showPDF() {
-      const pdfFrame = document.getElementById("pdf-frame");
-      pdfFrame.style.display = "block";
+    // Initialize Firebase app and retrieve the database reference
+    var firebaseConfig = {
+      apiKey: "AIzaSyB8jKumbYyKaOb3Ap7ZF3xpAdxZJ_ls8zc",
+      authDomain: "gas-mq7.firebaseapp.com",
+      databaseURL: "https://gas-mq7-default-rtdb.firebaseio.com",
+      projectId: "gas-mq7",
+      storageBucket: "gas-mq7.appspot.com",
+      messagingSenderId: "283159719369",
+      appId: "1:283159719369:web:f40b8faec6e915a11f0c18"
+    };
+  
+    firebase.initializeApp(firebaseConfig);
+  
+    // Get a reference to the Realtime Database
+    var rtdb = firebase.database();
+    var rtdbRef = rtdb.ref("Login");
+    var contactsRef = rtdb.ref("Contacts");
+
+// Add an event listener
+document.getElementById('login-form').addEventListener('submit', (event) => {
+event.preventDefault(); // Prevent the form from refreshing the page
+
+// Retrieve the values of the username and password 
+const username = document.getElementById('username').value;
+const password = document.getElementById('password').value;
+
+// Check the value of the login option radio button
+const loginOption = document.querySelector('input[name="login-option"]:checked').value;
+
+if (loginOption === 'login') {
+  // If the "Login" option is selected, retrieve the data from the "Login" node
+  rtdbRef.once('value').then((snapshot) => {
+    const loginData = snapshot.val();
+
+    // Compare the values of the username and password variables with the values in the database
+    if (username === loginData.username && password === loginData.password) {
+      // If the values match, redirect the user to the index.html page
+      window.location.replace('mainpage.html');
+    } else {
+      // If the values do not match, display an error message to the user
+      alert('Incorrect username or password');
     }
-    function hidePDF() {
-      const pdfFrame = document.getElementById("pdf-frame");
-      pdfFrame.style.display = "none";
+  });
+} else if (loginOption === 'contacts') {
+  // If the "Contacts" option is selected, try logging in with the "Contacts" node
+  loginWithContacts(username, password);
+}
+});
+
+function loginWithContacts(username, password) {
+  // Retrieve the data from the "Contacts" root node
+  contactsRef.once('value').then((snapshot) => {
+    let loginSuccessful = false;
+
+    snapshot.forEach((childSnapshot) => {
+      const contactData = childSnapshot.val();
+      const contactUsername = contactData.TeleID;
+      const contactPassword = contactData.NP;
+
+      // Compare the values of the username and password variables with the values in the database
+      if (username === contactUsername && password === contactPassword) {
+        loginSuccessful = true;
+        return; 
+      }
+    });
+
+    if (loginSuccessful) {
+      // If the login was successful, redirect the user to the guest.html page
+      window.location.replace('guest.html');
+    } else {
+      // If no matching record was found, display an error message
+      alert('Incorrect username or password');
     }
-  </script>
-</body>
-</html>
+  });
+}
+
+</script>
+
+
+  

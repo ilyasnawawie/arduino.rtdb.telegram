@@ -10,6 +10,7 @@
   <div class="menu">
     <a href="#" class="active" onclick="hidePDF()">Home</a>
     <a href="#" onclick="showPDF()">About</a>
+    <a href="#" onclick="window.location='addcontacts.html';">Contacts</a>
     <a href="#" onclick="window.open('https://github.com/ilyasnawawie/arduino.rtdb.telegram', 
     '_blank');">Documentation</a>
     <button id="logout-button">Logout</button>
@@ -40,7 +41,8 @@
     function hidePDF() {
       const pdfFrame = document.getElementById("pdf-frame");
       pdfFrame.style.display = "none";
-    }
-  </script>
+}
+</script>
+
 </body>
 </html>

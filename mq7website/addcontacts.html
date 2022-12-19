@@ -115,18 +115,15 @@ tr:nth-child(even) {
   text-decoration: underline;
 }
 
-/* PDF frame styles */
 #pdf-frame {
   display: none;
   border: none;
 }
   </style>
   <link rel="stylesheet" href="index.css">
-  <!-- Add the Firebase JavaScript library and credentials -->
   <script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-database.js"></script>
   <script>
-    // Initialize Firebase
     var firebaseConfig = {
       apiKey: "AIzaSyB8jKumbYyKaOb3Ap7ZF3xpAdxZJ_ls8zc",
       authDomain: "gas-mq7.firebaseapp.com",
@@ -141,11 +138,12 @@ tr:nth-child(even) {
 </head>
 <body>
   <div class="menu">
-    <a href="#" onclick="window.location='index.html';">Home</a>
+    <a href="#" onclick="window.location='mainpage.html';">Home</a>
     <a href="#" onclick="showPDF()">About</a>
     <a href="#" class="active" onclick="window.location='addcontacts.html';">Contacts</a>
     <a href="#" onclick="window.open('https://github.com/ilyasnawawie/arduino.rtdb.telegram',
-    '_blank');">Documentation</a> 
+    '_blank');">Documentation</a>
+    <button id="logout-button">Logout</button> 
   </div>
   <h1>Add Emergency Contacts</h1>
   <div style="text-align: center;">
@@ -177,6 +175,10 @@ tr:nth-child(even) {
   </div>
 
   <script>
+    const logoutButton = document.getElementById("logout-button");
+    logoutButton.addEventListener("click", function() {
+      window.location = "index.html";
+    });
     function showPDF() {
       const pdfFrame = document.getElementById("pdf-frame");
       pdfFrame.style.display = "block";
@@ -188,7 +190,7 @@ tr:nth-child(even) {
   </script>
 
   <script>
-    // Add a submit event listener to the form
+    // Add a submit event listener
     const form = document.querySelector("form");
     form.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -251,7 +253,7 @@ contactsRef.on("value", (snapshot) => {
   // Clear the table body
   tableBody.innerHTML = "";
 
-  // Populate the table body with the contact data
+  // Add the table body with the contact data
   for (const key in contacts) {
     const contact = contacts[key];
     const row = document.createElement("tr");
@@ -277,7 +279,7 @@ document.addEventListener("click", (event) => {
     contactsRef.child(key).once("value", (snapshot) => {
     const contact = snapshot.val();
 
-  // Populate the form fields with the contact data
+  // Add the form fields with the contact data
   document.getElementById("name").value = contact.Name;
   document.getElementById("phone").value = contact.NP;
   document.getElementById("teleid").value = contact.TeleID;

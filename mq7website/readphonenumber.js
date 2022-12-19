@@ -1,4 +1,3 @@
-// Initialize Firebase
 var firebaseConfig = {
   apiKey: "AIzaSyB8jKumbYyKaOb3Ap7ZF3xpAdxZJ_ls8zc",
   authDomain: "gas-mq7.firebaseapp.com",
@@ -10,14 +9,12 @@ var firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 
-// Get a reference to the Realtime Database
 var rtdb = firebase.database();
 var rtdbRef = rtdb.ref("Contacts");
 
-// Read all the child nodes of the "Contacts" node
+
 rtdbRef.once("value", function(snapshot) {
   snapshot.forEach(function(childSnapshot) {
-    // Read the known child nodes of the current child node
     var email = childSnapshot.child("Email").val();
     var np = childSnapshot.child("NP").val();
     var name = childSnapshot.child("Name").val();
